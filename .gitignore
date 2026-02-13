@@ -1,0 +1,22 @@
+# Build artifacts
+*.exe
+*.o
+*.a
+*.so
+*.dll
+
+# Object files directory - keep directory but ignore contents
+obj/*
+!obj/.gitkeep
+
+# VS Code settings
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Backup files
+*~
+*.bak
+*.swp
