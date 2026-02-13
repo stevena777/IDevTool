@@ -33,11 +33,11 @@ OUTPUT      = $(PROJECT_ROOT)/security-tool.exe
 
 # Test programs
 TEST_SYSLOG_SRC = $(PROJECT_ROOT)/tools/test_syslog.cpp
-TEST_SYSLOG_OUT = $(PROJECT_ROOT)/syslog-test.exe
+TEST_SYSLOG_OUT = $(PROJECT_ROOT)/system_logger.exe
 TEST_SYSLOG_OBJ = $(OBJ_DIR)/test_syslog.o
 
 TEST_PHOTO_SRC  = $(PROJECT_ROOT)/tools/test_photo.cpp
-TEST_PHOTO_OUT  = $(PROJECT_ROOT)/photo-test.exe
+TEST_PHOTO_OUT  = $(PROJECT_ROOT)/photo_manager.exe
 TEST_PHOTO_OBJ  = $(OBJ_DIR)/test_photo.o
 
 COMMON_OBJS     = $(OBJ_DIR)/device_manager.o $(OBJ_DIR)/syslog_manager.o $(OBJ_DIR)/afc_manager.o $(OBJ_DIR)/photo_manager.o
@@ -84,10 +84,10 @@ help:
 	@echo "Available targets:"
 	@echo "  all         - Build the program (default)"
 	@echo "  run         - Build and run the program"
-	@echo "  test-syslog - Build syslog test program"
-	@echo "  run-syslog  - Build and run syslog test"
-	@echo "  test-photo  - Build photo test program"
-	@echo "  run-photo   - Build and run photo test"
+	@echo "  test-syslog - Build system logger program"
+	@echo "  run-syslog  - Build and run system logger"
+	@echo "  test-photo  - Build photo manager program"
+	@echo "  run-photo   - Build and run photo manager"
 	@echo "  clean       - Remove build artifacts"
 	@echo "  help        - Display this help message"
 
@@ -95,11 +95,11 @@ help:
 # Test Program Targets
 # ============================================================================
 
-# Build syslog test program
+# Build system logger program
 $(TEST_SYSLOG_OUT): $(COMMON_OBJS) $(TEST_SYSLOG_OBJ)
 	@echo "Linking $(TEST_SYSLOG_OUT)..."
 	$(CXX) $(COMMON_OBJS) $(TEST_SYSLOG_OBJ) -o $(TEST_SYSLOG_OUT) $(LIBS) $(LDFLAGS)
-	@echo "Syslog test build complete!"
+	@echo "System logger build complete!"
 
 # Compile test_syslog.cpp
 $(TEST_SYSLOG_OBJ): $(TEST_SYSLOG_SRC)
@@ -110,13 +110,13 @@ $(TEST_SYSLOG_OBJ): $(TEST_SYSLOG_SRC)
 # Run syslog test
 run-syslog: $(TEST_SYSLOG_OUT)
 	@echo "Running $(TEST_SYSLOG_OUT)..."
-	cd $(PROJECT_ROOT) && ./syslog-test.exe
+	cd $(PROJECT_ROOT) && ./system_logger.exe
 
-# Build photo test program
+# Build photo manager program
 $(TEST_PHOTO_OUT): $(COMMON_OBJS) $(TEST_PHOTO_OBJ)
 	@echo "Linking $(TEST_PHOTO_OUT)..."
 	$(CXX) $(COMMON_OBJS) $(TEST_PHOTO_OBJ) -o $(TEST_PHOTO_OUT) $(LIBS) $(LDFLAGS)
-	@echo "Photo test build complete!"
+	@echo "Photo manager build complete!"
 
 # Compile test_photo.cpp
 $(TEST_PHOTO_OBJ): $(TEST_PHOTO_SRC)
@@ -127,4 +127,4 @@ $(TEST_PHOTO_OBJ): $(TEST_PHOTO_SRC)
 # Run photo test
 run-photo: $(TEST_PHOTO_OUT)
 	@echo "Running $(TEST_PHOTO_OUT)..."
-	cd $(PROJECT_ROOT) && ./photo-test.exe
+	cd $(PROJECT_ROOT) && ./photo_manager.exe
