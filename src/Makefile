@@ -27,7 +27,7 @@ LIBS        = -L$(LIB_DIR) \
               -lplist++-2.0
 
 # Source files and output
-SOURCES     = device_manager.cpp syslog_manager.cpp main.cpp
+SOURCES     = device_manager.cpp syslog_manager.cpp afc_manager.cpp photo_manager.cpp main.cpp
 OBJECTS     = $(addprefix $(OBJ_DIR)/, $(SOURCES:.cpp=.o))
 OUTPUT      = $(PROJECT_ROOT)/security-tool.exe
 
@@ -35,19 +35,25 @@ OUTPUT      = $(PROJECT_ROOT)/security-tool.exe
 TEST_SYSLOG_SRC = $(PROJECT_ROOT)/tools/test_syslog.cpp
 TEST_SYSLOG_OUT = $(PROJECT_ROOT)/syslog-test.exe
 TEST_SYSLOG_OBJ = $(OBJ_DIR)/test_syslog.o
-COMMON_OBJS     = $(OBJ_DIR)/device_manager.o $(OBJ_DIR)/syslog_manager.o
+
+TEST_PHOTO_SRC  = $(PROJECT_ROOT)/tools/test_photo.cpp
+TEST_PHOTO_OUT  = $(PROJECT_ROOT)/photo-test.exe
+TEST_PHOTO_OBJ  = $(OBJ_DIR)/test_photo.o
+
+COMMON_OBJS     = $(OBJ_DIR)/device_manager.o $(OBJ_DIR)/syslog_manager.o $(OBJ_DIR)/afc_manager.o $(OBJ_DIR)/photo_manager.o
 
 # ============================================================================
 # Targets
 # ============================================================================
 
-.PHONY: all clean run help test-syslog run-syslog
+.PHONY: all clean run help test-syslog run-syslog test-photo run-photo
 
 # Default target - builds everything
-all: $(OUTPUT) $(TEST_SYSLOG_OUT)
+all: $(OUTPUT) $(TEST_SYSLOG_OUT) $(TEST_PHOTO_OUT)
 
 # Build test programs
 test-syslog: $(TEST_SYSLOG_OUT)
+test-photo: $(TEST_PHOTO_OUT)
 
 # Build the executable
 $(OUTPUT): $(OBJECTS)
@@ -69,7 +75,7 @@ run: $(OUTPUT)
 # Clean build artifacts
 clean:
 	@echo "Cleaning build artifacts..."
-	rm -f $(OUTPUT) $(TEST_SYSLOG_OUT)
+	rm -f $(OUTPUT) $(TEST_SYSLOG_OUT) $(TEST_PHOTO_OUT)
 	rm -rf $(OBJ_DIR)/*.o
 	@echo "Clean complete!"
 
@@ -80,6 +86,8 @@ help:
 	@echo "  run         - Build and run the program"
 	@echo "  test-syslog - Build syslog test program"
 	@echo "  run-syslog  - Build and run syslog test"
+	@echo "  test-photo  - Build photo test program"
+	@echo "  run-photo   - Build and run photo test"
 	@echo "  clean       - Remove build artifacts"
 	@echo "  help        - Display this help message"
 
@@ -103,3 +111,20 @@ $(TEST_SYSLOG_OBJ): $(TEST_SYSLOG_SRC)
 run-syslog: $(TEST_SYSLOG_OUT)
 	@echo "Running $(TEST_SYSLOG_OUT)..."
 	cd $(PROJECT_ROOT) && ./syslog-test.exe
+
+# Build photo test program
+$(TEST_PHOTO_OUT): $(COMMON_OBJS) $(TEST_PHOTO_OBJ)
+	@echo "Linking $(TEST_PHOTO_OUT)..."
+	$(CXX) $(COMMON_OBJS) $(TEST_PHOTO_OBJ) -o $(TEST_PHOTO_OUT) $(LIBS) $(LDFLAGS)
+	@echo "Photo test build complete!"
+
+# Compile test_photo.cpp
+$(TEST_PHOTO_OBJ): $(TEST_PHOTO_SRC)
+	@echo "Compiling $<..."
+	@mkdir -p $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+
+# Run photo test
+run-photo: $(TEST_PHOTO_OUT)
+	@echo "Running $(TEST_PHOTO_OUT)..."
+	cd $(PROJECT_ROOT) && ./photo-test.exe

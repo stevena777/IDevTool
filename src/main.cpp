@@ -2,15 +2,15 @@
 #include "device_manager.h"
 
 /*****************************************************************************/
-/* Function Name: main                                                      */
+/* Function Name: main                                                       */
 /*                                                                           */
-/* Description: Entry point for iOS Device Security Tool. Connects to       */
+/* Description: Entry point for iOS Device Security Tool. Connects to        */
 /*              device, establishes lockdown connection, and displays        */
 /*              device information                                           */
 /*                                                                           */
-/* Date            Engineer              Comments                           */
+/* Date            Engineer              Comments                            */
 /* ------------------------------------------------------------------------- */
-/* 2026-02-12      S. Amalfitano         Initial implementation             */
+/* 2026-02-12      S. Amalfitano         Initial implementation              */
 /*****************************************************************************/
 int main()
 {

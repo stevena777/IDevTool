@@ -325,3 +325,17 @@ idevice_t device_manager::get_device() const
 {
     return device;
 }
+
+/*****************************************************************************/
+/* Function Name: get_lockdown_client                                        */
+/*                                                                           */
+/* Description: Returns the lockdown client handle for use by other managers */
+/*                                                                           */
+/* Date            Engineer              Comments                            */
+/* ------------------------------------------------------------------------- */
+/* 2026-02-12      S. Amalfitano         Initial implementation              */
+/*****************************************************************************/
+lockdownd_client_t device_manager::get_lockdown_client() const
+{
+    return client;
+}

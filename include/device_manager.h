@@ -37,6 +37,7 @@ public:
     void print_device_info();
     bool is_connected() const;
     idevice_t get_device() const;
+    lockdownd_client_t get_lockdown_client() const;
 };
 
 #endif // DEVICE_MANAGER_H
