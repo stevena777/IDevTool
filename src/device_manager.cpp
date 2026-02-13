@@ -311,3 +311,17 @@ bool device_manager::is_connected() const
 {
     return device_connected && lockdown_connected;
 }
+
+/*****************************************************************************/
+/* Function Name: get_device                                                 */
+/*                                                                           */
+/* Description: Returns the device handle for use by other managers          */
+/*                                                                           */
+/* Date            Engineer              Comments                            */
+/* ------------------------------------------------------------------------- */
+/* 2026-02-12      S. Amalfitano         Initial implementation              */
+/*****************************************************************************/
+idevice_t device_manager::get_device() const
+{
+    return device;
+}

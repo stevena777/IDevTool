@@ -27,18 +27,27 @@ LIBS        = -L$(LIB_DIR) \
               -lplist++-2.0
 
 # Source files and output
-SOURCES     = device_manager.cpp main.cpp
+SOURCES     = device_manager.cpp syslog_manager.cpp main.cpp
 OBJECTS     = $(addprefix $(OBJ_DIR)/, $(SOURCES:.cpp=.o))
 OUTPUT      = $(PROJECT_ROOT)/security-tool.exe
+
+# Test programs
+TEST_SYSLOG_SRC = $(PROJECT_ROOT)/tools/test_syslog.cpp
+TEST_SYSLOG_OUT = $(PROJECT_ROOT)/syslog-test.exe
+TEST_SYSLOG_OBJ = $(OBJ_DIR)/test_syslog.o
+COMMON_OBJS     = $(OBJ_DIR)/device_manager.o $(OBJ_DIR)/syslog_manager.o
 
 # ============================================================================
 # Targets
 # ============================================================================
 
-.PHONY: all clean run help
+.PHONY: all clean run help test-syslog run-syslog
 
-# Default target
-all: $(OUTPUT)
+# Default target - builds everything
+all: $(OUTPUT) $(TEST_SYSLOG_OUT)
+
+# Build test programs
+test-syslog: $(TEST_SYSLOG_OUT)
 
 # Build the executable
 $(OUTPUT): $(OBJECTS)
@@ -60,14 +69,37 @@ run: $(OUTPUT)
 # Clean build artifacts
 clean:
 	@echo "Cleaning build artifacts..."
-	rm -f $(OUTPUT)
+	rm -f $(OUTPUT) $(TEST_SYSLOG_OUT)
 	rm -rf $(OBJ_DIR)/*.o
 	@echo "Clean complete!"
 
 # Display help information
 help:
 	@echo "Available targets:"
-	@echo "  all    - Build the program (default)"
-	@echo "  run    - Build and run the program"
-	@echo "  clean  - Remove build artifacts"
-	@echo "  help   - Display this help message"
+	@echo "  all         - Build the program (default)"
+	@echo "  run         - Build and run the program"
+	@echo "  test-syslog - Build syslog test program"
+	@echo "  run-syslog  - Build and run syslog test"
+	@echo "  clean       - Remove build artifacts"
+	@echo "  help        - Display this help message"
+
+# ============================================================================
+# Test Program Targets
+# ============================================================================
+
+# Build syslog test program
+$(TEST_SYSLOG_OUT): $(COMMON_OBJS) $(TEST_SYSLOG_OBJ)
+	@echo "Linking $(TEST_SYSLOG_OUT)..."
+	$(CXX) $(COMMON_OBJS) $(TEST_SYSLOG_OBJ) -o $(TEST_SYSLOG_OUT) $(LIBS) $(LDFLAGS)
+	@echo "Syslog test build complete!"
+
+# Compile test_syslog.cpp
+$(TEST_SYSLOG_OBJ): $(TEST_SYSLOG_SRC)
+	@echo "Compiling $<..."
+	@mkdir -p $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+
+# Run syslog test
+run-syslog: $(TEST_SYSLOG_OUT)
+	@echo "Running $(TEST_SYSLOG_OUT)..."
+	cd $(PROJECT_ROOT) && ./syslog-test.exe
